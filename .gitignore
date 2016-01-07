@@ -1,2 +1,11 @@
 .project
 .svn
+diamond-client/.classpath
+diamond-client/target/
+diamond-sdk/.classpath
+diamond-sdk/target/
+diamond-server/.classpath
+diamond-server/target/
+diamond-utils/.classpath
+diamond-utils/target/
+target/

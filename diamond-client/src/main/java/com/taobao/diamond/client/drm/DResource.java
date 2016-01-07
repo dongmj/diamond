@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DResource {
+	/**
+	 * 资源类id(必填)
+	 */
     String id();
-    String description();
+    String description() default "";
 }

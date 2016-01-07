@@ -7,17 +7,55 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+/**
+ * 分布式资源类
+ * @author dongmj
+ *
+ */
 public class DistributedResource {
+	/**
+	 * 资源id
+	 */
     private String id;
+    /**
+     * 资源名
+     */
     private ObjectName objectName;
+    /**
+     * 域名
+     */
     private String domain;
+    /**
+     * 应用名
+     */
     private String app;
+    /**
+     * 版本
+     */
     private String version;
+    /**
+     * 扩展属性
+     */
     private Map<String, String> extensionProperties;
+    /**
+     * 资源描述
+     */
     private String desc;
+    /**
+     * 资源属性列表
+     */
     private Map<String, DistributedResourceAttribute> attributes;
+    /**
+     * 更新属性前回调方法
+     */
     private Method beforeUpdateMethod;
+    /**
+     * 更新属性后回调方法
+     */
     private Method afterUpdateMethod;
+    /**
+     * 实现类对象
+     */
     private Object implementation;
     
     public DistributedResource(String id, String domain, String version, String app) {

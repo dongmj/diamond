@@ -66,7 +66,14 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
 
     private static final Log log = LogFactory.getLog("diamondSdkLog");
 
-    // DiamondSDKConf配置集map
+    /**
+	 * @param diamondSDKConfMaps the diamondSDKConfMaps to set
+	 */
+	public void setDiamondSDKConfMaps(Map<String, DiamondSDKConf> diamondSDKConfMaps) {
+		this.diamondSDKConfMaps = diamondSDKConfMaps;
+	}
+
+	// DiamondSDKConf配置集map
     private Map<String, DiamondSDKConf> diamondSDKConfMaps;
 
     // 连接超时时间

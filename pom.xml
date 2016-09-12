@@ -10,6 +10,7 @@
 	<name>taobao diamond v${project.version}</name>
 
 	<properties>
+		<project.build.sourceEncoding>GBK</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
@@ -21,6 +22,15 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>GBK</encoding>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>com.atlassian.maven.plugins</groupId>
 				<artifactId>maven-clover2-plugin</artifactId>

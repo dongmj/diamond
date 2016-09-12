@@ -9,3 +9,7 @@ diamond-server/target/
 diamond-utils/.classpath
 diamond-utils/target/
 target/
+diamond-client/.settings/
+diamond-sdk/.settings/
+diamond-server/.settings/
+diamond-utils/.settings/

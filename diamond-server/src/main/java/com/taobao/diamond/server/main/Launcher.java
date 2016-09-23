@@ -1,5 +1,9 @@
 package com.taobao.diamond.server.main;
 
+import java.io.File;
+import java.net.URL;
+import java.security.ProtectionDomain;
+
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -11,7 +15,7 @@ public class Launcher {
 	
 	private static final String DEFAULT_WEBAPP_PATH = "src/main/webapp";
 	
-	public static Server createServerInSource(int port, String contextPath) {
+	public static Server createDevServer(int port, String contextPath) {
 		Server server = new Server();
 		server.setStopAtShutdown(true);
 		ServerConnector connector = new ServerConnector(server);
@@ -26,8 +30,23 @@ public class Launcher {
 		return server;
 	}
 	
+	public static Server createJettyServer(int port, String contextPath) {
+		Server server = new Server(port);
+		server.setStopAtShutdown(true);
+		ProtectionDomain protectionDomain = Launcher.class.getProtectionDomain();
+		URL location = protectionDomain.getCodeSource().getLocation();
+		String warFile = location.toExternalForm();
+		WebAppContext context = new WebAppContext(warFile, contextPath);
+		context.setServer(server);
+		String currentDir = new File(location.getPath()).getParent();
+		File workDir = new File(currentDir, "work");
+		context.setTempDirectory(workDir);
+		server.setHandler(context);
+		return server;
+	}
+	
 	public void startJetty(int port, String context) {
-		final Server server = Launcher.createServerInSource(PORT, CONTEXT);
+		final Server server = Launcher.createJettyServer(PORT, CONTEXT);
 		try {
 			server.stop();
 			server.start();

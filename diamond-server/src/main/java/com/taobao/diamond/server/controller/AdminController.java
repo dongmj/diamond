@@ -80,7 +80,7 @@ public class AdminController {
         }
         if (!checkSuccess) {
             modelMap.addAttribute("message", errorMessage);
-            return "/admin/config/new";
+            return "admin/config/new";
         }
 
         dataId = dataId.trim();
@@ -99,7 +99,7 @@ public class AdminController {
         // 删除数据
         this.configService.removeConfigInfo(id);
         modelMap.addAttribute("message", "删除成功!");
-        return "/admin/config/list";
+        return "admin/config/list";
     }
 
 
@@ -126,7 +126,7 @@ public class AdminController {
         }
         if (!checkSuccess) {
             modelMap.addAttribute("message", errorMessage);
-            return "/admin/config/upload";
+            return "admin/config/upload";
         }
 
         this.configService.addConfigInfo(dataId, group, content);
@@ -160,7 +160,7 @@ public class AdminController {
         if (!checkSuccess) {
             modelMap.addAttribute("message", errorMessage);
             modelMap.addAttribute("configInfo", configInfo);
-            return "/admin/config/edit";
+            return "admin/config/edit";
         }
 
         this.configService.updateConfigInfo(dataId, group, content);
@@ -206,7 +206,7 @@ public class AdminController {
         if (!checkSuccess) {
             modelMap.addAttribute("message", errorMessage);
             modelMap.addAttribute("configInfo", configInfo);
-            return "/admin/config/edit";
+            return "admin/config/edit";
         }
 
         this.configService.updateConfigInfo(dataId, group, content);
@@ -231,13 +231,13 @@ public class AdminController {
             catch (Exception e) {
                 log.error("序列化page对象出错", e);
             }
-            return "/admin/config/list_json";
+            return "admin/config/list_json";
         }
         else {
             modelMap.addAttribute("dataId", dataId);
             modelMap.addAttribute("group", group);
             modelMap.addAttribute("page", page);
-            return "/admin/config/list";
+            return "admin/config/list";
         }
     }
 
@@ -248,7 +248,7 @@ public class AdminController {
             @RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize, ModelMap modelMap) {
         if (StringUtils.isBlank(dataId) && StringUtils.isBlank(group)) {
             modelMap.addAttribute("message", "模糊查询请至少设置一个查询参数");
-            return "/admin/config/list";
+            return "admin/config/list";
         }
         Page<ConfigInfo> page = this.configService.findConfigInfoLike(pageNo, pageSize, group, dataId);
 
@@ -261,14 +261,14 @@ public class AdminController {
             catch (Exception e) {
                 log.error("序列化page对象出错", e);
             }
-            return "/admin/config/list_json";
+            return "admin/config/list_json";
         }
         else {
             modelMap.addAttribute("page", page);
             modelMap.addAttribute("dataId", dataId);
             modelMap.addAttribute("group", group);
             modelMap.addAttribute("method", "listConfigLike");
-            return "/admin/config/list";
+            return "admin/config/list";
         }
     }
 
@@ -280,7 +280,7 @@ public class AdminController {
         group = group.trim();
         ConfigInfo configInfo = this.configService.findConfigInfo(dataId, group);
         modelMap.addAttribute("configInfo", configInfo);
-        return "/admin/config/edit";
+        return "admin/config/edit";
     }
 
 
@@ -350,7 +350,7 @@ public class AdminController {
         }
         modelMap.addAttribute("json", json);
 
-        return "/admin/config/batch_result";
+        return "admin/config/batch_result";
     }
 
 
@@ -428,7 +428,7 @@ public class AdminController {
         }
         modelMap.addAttribute("json", json);
 
-        return "/admin/config/batch_result";
+        return "admin/config/batch_result";
     }
 
 
@@ -436,7 +436,7 @@ public class AdminController {
     public String listUser(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
         Map<String, String> userMap = this.adminService.getAllUsers();
         modelMap.addAttribute("userMap", userMap);
-        return "/admin/user/list";
+        return "admin/user/list";
     }
 
 
@@ -449,7 +449,7 @@ public class AdminController {
         }
         if (StringUtils.isBlank(password) || DiamondUtils.hasInvalidChar(password.trim())) {
             modelMap.addAttribute("message", "无效的密码");
-            return "/admin/user/new";
+            return "admin/user/new";
         }
         if (this.adminService.addUser(userName, password))
             modelMap.addAttribute("message", "添加成功!");
@@ -505,7 +505,7 @@ public class AdminController {
     public String setRefuseRequestCount(@RequestParam("count") long count, ModelMap modelMap) {
         if (count <= 0) {
             modelMap.addAttribute("message", "非法的计数");
-            return "/admin/count";
+            return "admin/count";
         }
         GlobalCounter.getCounter().set(count);
         modelMap.addAttribute("message", "设置成功!");
@@ -516,7 +516,7 @@ public class AdminController {
     @RequestMapping(params = "method=getRefuseRequestCount", method = RequestMethod.GET)
     public String getRefuseRequestCount(ModelMap modelMap) {
         modelMap.addAttribute("count", GlobalCounter.getCounter().get());
-        return "/admin/count";
+        return "admin/count";
     }
 
 

@@ -1041,4 +1041,22 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
         return response;
     }
 
+
+	@Override
+	public ContextResult unpublish(String dataId, String groupName, String serverId) {
+		ContextResult response = new ContextResult();
+        ContextResult result = null;
+        result = queryByDataIdAndGroupName(dataId, groupName, serverId);
+        if (null == result || !result.isSuccess()) {
+            response.setSuccess(false);
+            response.setStatusMsg("找不到需要修改的数据记录，记录不存在!");
+            log.warn("找不到需要修改的数据记录，记录不存在! dataId=" + dataId + ",group=" + groupName + ",serverId=" + serverId);
+            return response;
+        } else {
+        	log.debug("dataId[" + dataId + "],groupName[" + groupName + "]对应的配置信息为:" + result.getConfigInfo());
+        	return processDelete(serverId, result.getConfigInfo().getId());
+        }
+
+	}
+
 }

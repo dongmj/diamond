@@ -116,6 +116,15 @@ public interface DiamondSDKManager {
 	 */
 	public ContextResult unpublish(String serverId, long id);
 	
+	/**
+	 * 移除特定服务器上的配置信息
+	 * 
+	 * @param dataId
+	 * @param groupName
+	 * @param serverId
+	 * @return
+	 */
+	public ContextResult unpublish(String dataId, String groupName, String serverId);
 	
 	/**
      * 批量查询

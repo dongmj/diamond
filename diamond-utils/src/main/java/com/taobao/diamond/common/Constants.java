@@ -53,7 +53,7 @@ public class Constants {
 
     public static final int RECV_WAIT_TIMEOUT = ONCE_TIMEOUT * 5;// ∫¡√Î
 
-    public static final String HTTP_URI_FILE = "/url";
+    public static final String HTTP_URI_FILE = "/config.co";
 
     public static final String CONFIG_HTTP_URI_FILE = "/url";
 

@@ -11,6 +11,7 @@ package com.taobao.diamond.mockserver;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.taobao.diamond.client.impl.DiamondClientFactory;
 import com.taobao.diamond.common.Constants;
@@ -29,7 +30,7 @@ public class MockServer {
         }
     }
 
-    private static ConcurrentHashMap<String, Map<String, Pair>> staticConfigInfos =
+    private static ConcurrentMap<String, Map<String, Pair>> staticConfigInfos =
             new ConcurrentHashMap<String, Map<String, Pair>>();
     private static volatile boolean testMode = false;
 

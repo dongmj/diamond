@@ -10,7 +10,7 @@
 package com.taobao.diamond.client;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.taobao.diamond.configinfo.CacheData;
 
@@ -143,7 +143,7 @@ public interface DiamondSubscriber extends DiamondClientSub {
      * 
      * @return
      */
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, CacheData>> getCache();
+    public ConcurrentMap<String, ConcurrentMap<String, CacheData>> getCache();
 
 
     /**

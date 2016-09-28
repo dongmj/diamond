@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -92,8 +93,8 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
     }
     private final Log dataLog = LogFactory.getLog(LoggerInit.LOG_NAME_CONFIG_DATA);
 
-    private final ConcurrentHashMap<String/* DataID */, ConcurrentHashMap<String/* Group */, CacheData>> cache =
-            new ConcurrentHashMap<String, ConcurrentHashMap<String, CacheData>>();
+    private final ConcurrentMap<String/* DataID */, ConcurrentMap<String/* Group */, CacheData>> cache =
+            new ConcurrentHashMap<String, ConcurrentMap<String, CacheData>>();
 
     private volatile SubscriberListener subscriberListener = null;
     private volatile DiamondConfigure diamondConfigure;
@@ -293,8 +294,8 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
 
     private void checkSnapshot() {
-        for (Entry<String, ConcurrentHashMap<String, CacheData>> cacheDatasEntry : cache.entrySet()) {
-            ConcurrentHashMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
+        for (Entry<String, ConcurrentMap<String, CacheData>> cacheDatasEntry : cache.entrySet()) {
+        	ConcurrentMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
             if (null == cacheDatas) {
                 continue;
             }
@@ -326,7 +327,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
             String freshDataId = freshDataIdGroupPair.substring(0, middleIndex);
             String freshGroup = freshDataIdGroupPair.substring(middleIndex + 1);
 
-            ConcurrentHashMap<String, CacheData> cacheDatas = cache.get(freshDataId);
+            ConcurrentMap<String, CacheData> cacheDatas = cache.get(freshDataId);
             if (null == cacheDatas) {
                 continue;
             }
@@ -340,9 +341,9 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
 
     private void checkLocalConfigInfo() {
-        for (Entry<String/* dataId */, ConcurrentHashMap<String/* group */, CacheData>> cacheDatasEntry : cache
+        for (Entry<String/* dataId */, ConcurrentMap<String/* group */, CacheData>> cacheDatasEntry : cache
             .entrySet()) {
-            ConcurrentHashMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
+        	ConcurrentMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
             if (null == cacheDatas) {
                 continue;
             }
@@ -664,14 +665,14 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
     private CacheData getCacheData(String dataId, String group) {
         CacheData cacheData = null;
-        ConcurrentHashMap<String, CacheData> cacheDatas = this.cache.get(dataId);
+        ConcurrentMap<String, CacheData> cacheDatas = this.cache.get(dataId);
         if (null != cacheDatas) {
             cacheData = cacheDatas.get(group);
         }
         if (null == cacheData) {
             cacheData = new CacheData(dataId, group);
-            ConcurrentHashMap<String, CacheData> newCacheDatas = new ConcurrentHashMap<String, CacheData>();
-            ConcurrentHashMap<String, CacheData> oldCacheDatas = this.cache.putIfAbsent(dataId, newCacheDatas);
+            ConcurrentMap<String, CacheData> newCacheDatas = new ConcurrentHashMap<String, CacheData>();
+            ConcurrentMap<String, CacheData> oldCacheDatas = this.cache.putIfAbsent(dataId, newCacheDatas);
             if (null == oldCacheDatas) {
                 oldCacheDatas = newCacheDatas;
             }
@@ -875,7 +876,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
     private Set<String> testData() {
         Set<String> dataIdList = new HashSet<String>();
         for (String dataId : this.cache.keySet()) {
-            ConcurrentHashMap<String, CacheData> cacheDatas = this.cache.get(dataId);
+        	ConcurrentMap<String, CacheData> cacheDatas = this.cache.get(dataId);
             for (String group : cacheDatas.keySet()) {
                 if (null != MockServer.getUpdateConfigInfo(dataId, group)) {
                     dataIdList.add(dataId + WORD_SEPARATOR + group);
@@ -895,9 +896,9 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
     private String getProbeUpdateString() {
         // »ñÈ¡checkµÄDataID:Group:MD5´®
         StringBuilder probeModifyBuilder = new StringBuilder();
-        for (Entry<String, ConcurrentHashMap<String, CacheData>> cacheDatasEntry : this.cache.entrySet()) {
+        for (Entry<String, ConcurrentMap<String, CacheData>> cacheDatasEntry : this.cache.entrySet()) {
             String dataId = cacheDatasEntry.getKey();
-            ConcurrentHashMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
+            ConcurrentMap<String, CacheData> cacheDatas = cacheDatasEntry.getValue();
             if (null == cacheDatas) {
                 continue;
             }
@@ -1157,10 +1158,10 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
             group = Constants.DEFAULT_GROUP;
         }
 
-        ConcurrentHashMap<String, CacheData> cacheDatas = this.cache.get(dataId);
+        ConcurrentMap<String, CacheData> cacheDatas = this.cache.get(dataId);
         if (null == cacheDatas) {
-            ConcurrentHashMap<String, CacheData> newCacheDatas = new ConcurrentHashMap<String, CacheData>();
-            ConcurrentHashMap<String, CacheData> oldCacheDatas = this.cache.putIfAbsent(dataId, newCacheDatas);
+        	ConcurrentMap<String, CacheData> newCacheDatas = new ConcurrentHashMap<String, CacheData>();
+        	ConcurrentMap<String, CacheData> oldCacheDatas = this.cache.putIfAbsent(dataId, newCacheDatas);
             if (null != oldCacheDatas) {
                 cacheDatas = oldCacheDatas;
             }
@@ -1193,7 +1194,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
         if (null == group) {
             group = Constants.DEFAULT_GROUP;
         }
-        ConcurrentHashMap<String, CacheData> cacheDatas = this.cache.get(dataId);
+        ConcurrentMap<String, CacheData> cacheDatas = this.cache.get(dataId);
         if (null == cacheDatas) {
             return false;
         }
@@ -1211,7 +1212,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
     }
 
 
-    public ConcurrentHashMap<String, ConcurrentHashMap<String, CacheData>> getCache() {
+    public ConcurrentMap<String, ConcurrentMap<String, CacheData>> getCache() {
         return cache;
     }
 
@@ -1225,7 +1226,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
         if (null == group) {
             group = Constants.DEFAULT_GROUP;
         }
-        ConcurrentHashMap<String, CacheData> cacheDatas = this.cache.get(dataId);
+        ConcurrentMap<String, CacheData> cacheDatas = this.cache.get(dataId);
         if (null == cacheDatas) {
             return;
         }

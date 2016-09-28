@@ -58,7 +58,6 @@ public class DefaultDiamondManager implements DiamondManager {
             this.group, this.managerListeners);
         diamondSubscriber.addDataId(this.dataId, this.group);
         diamondSubscriber.start();
-
     }
 
 

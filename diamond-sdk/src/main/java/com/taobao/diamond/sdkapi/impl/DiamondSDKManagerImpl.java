@@ -250,7 +250,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
             log.debug("使用processPulishByDefinedServerId(" + dataId + "," + groupName + "," + context + "," + serverId
                     + ")进行推送");
 
-        String postUrl = "/diamond-server/admin.do?method=postConfig";
+        String postUrl = "/admin.do?method=postConfig";
         PostMethod post = new PostMethod(postUrl);
         // 设置请求超时时间
         post.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, require_timeout);
@@ -340,7 +340,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
         }
         // 有数据，则修改
         else {
-            String postUrl = "/diamond-server/admin.do?method=updateConfig";
+            String postUrl = "/admin.do?method=updateConfig";
             PostMethod post = new PostMethod(postUrl);
             // 设置请求超时时间
             post.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, require_timeout);
@@ -442,7 +442,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
                 break;
             client.getHostConfiguration().setHost(diamondConf.getDiamondIp(),
                 Integer.parseInt(diamondConf.getDiamondPort()), "http");
-            PostMethod post = new PostMethod("/diamond-server/login.do?method=login");
+            PostMethod post = new PostMethod("/login.do?method=login");
             // 设置请求超时时间
             post.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, require_timeout);
             // 填充用户名，密码
@@ -482,9 +482,9 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
     }
 
     static final String LIST_FORMAT_URL =
-            "/diamond-server/admin.do?method=listConfig&group=%s&dataId=%s&pageNo=%d&pageSize=%d";
+            "/admin.do?method=listConfig&group=%s&dataId=%s&pageNo=%d&pageSize=%d";
     static final String LIST_LIKE_FORMAT_URL =
-            "/diamond-server/admin.do?method=listConfigLike&group=%s&dataId=%s&pageNo=%d&pageSize=%d";
+            "/admin.do?method=listConfigLike&group=%s&dataId=%s&pageNo=%d&pageSize=%d";
 
 
     /**
@@ -771,7 +771,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
             return response;
         }
         log.info("使用processDelete(" + serverId + "," + id);
-        String url = "/diamond-server/admin.do?method=deleteConfig&id=" + id;
+        String url = "/admin.do?method=deleteConfig&id=" + id;
         GetMethod method = new GetMethod(url);
         configureGetMethod(method);
         try {
@@ -850,7 +850,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
         }
 
         // 构造HTTP method
-        PostMethod post = new PostMethod("/diamond-server/admin.do?method=batchQuery");
+        PostMethod post = new PostMethod("/admin.do?method=batchQuery");
         // 设置请求超时时间
         post.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, require_timeout);
         try {
@@ -963,7 +963,7 @@ public class DiamondSDKManagerImpl implements DiamondSDKManager {
         }
 
         // 构造HTTP method
-        PostMethod post = new PostMethod("/diamond-server/admin.do?method=batchAddOrUpdate");
+        PostMethod post = new PostMethod("/admin.do?method=batchAddOrUpdate");
         // 设置请求超时时间
         post.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, require_timeout);
         try {

@@ -13,3 +13,4 @@ diamond-client/.settings/
 diamond-sdk/.settings/
 diamond-server/.settings/
 diamond-utils/.settings/
+diamond-server/src/main/webapp/WEB-INF/logs/

@@ -14,7 +14,7 @@ public class ConfregAssembly implements DistributedResourceAssembly {
         Map<String, DistributedResourceAttribute> attributes = distributedResource.getAttributes();
         for(DistributedResourceAttribute attribute : attributes.values()) {
             try {
-                confregClient.registerDataSubscriber(ConfregDataBuilder.buildDataId(attribute), DEFAULT_CONFREG_GROUP, attribute);
+                confregClient.registerDataSubscriber(ConfregDataBuilder.buildDataId(attribute), distributedResource.getId(), attribute);
             } catch (MalformedObjectNameException e) {
                 throw new RuntimeException("资源[" + ObjectNameBuilder.buildString(attribute) + "] 更新的订阅器出现异常", e);
             }

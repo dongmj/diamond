@@ -22,6 +22,8 @@ public class NIOClient {
 		sc = SocketChannel.open();
 		sc.configureBlocking(false);
 		sc.connect(new InetSocketAddress(ip, port));
+		sc.register(selector, SelectionKey.OP_CONNECT);
+		while(!sc.finishConnect());
 		sc.register(selector, SelectionKey.OP_READ);
 	}
 	

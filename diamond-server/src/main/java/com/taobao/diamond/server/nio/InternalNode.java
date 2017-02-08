@@ -39,17 +39,21 @@ public class InternalNode {
 	
 	private void initOtherNodes(int localPort) throws Exception {
 		for(int i = 0; i < 10; i++) {
-			int tryPort = 10011 + i;
+			int tryPort = 60011 + i;
 			if(tryPort == localPort)
 				continue;
 			NIOClient client = new NIOClient(clientSelector);
-			client.initClient("localhost", tryPort);
+			try {
+				client.initClient("localhost", tryPort);
+			} catch(Exception e) {
+				e.printStackTrace();
+				continue;
+			}
 			otherNodes.add(client);
 		}
-		findLeader();
 	}
 	
-	private void findLeader() throws Exception {
+	public void findLeader() throws Exception {
 		BasicEvent event = new BasicEvent();
 		event.setTerm(currentTerm);
 		event.setType(EventType.FIND_LEADER);
@@ -68,8 +72,9 @@ public class InternalNode {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		InternalNode node = new InternalNode(10012);
+		InternalNode node = new InternalNode(60011);
 		node.start();
+		node.findLeader();
 	}
 	
 	private Charset charset = Charset.forName("UTF-8");
@@ -99,8 +104,8 @@ public class InternalNode {
 	}
 	
 	private void dealWithSelectionKey(SelectionKey sk) throws IOException {
-		if(sk.isReadable()) 
-		{
+		System.out.println("client: " + sk);
+		if(sk.isReadable()) {
 			SocketChannel sc = (SocketChannel) sk.channel();
 			ByteBuffer buff = ByteBuffer.allocate(1024);
 			String content = "";
@@ -111,7 +116,8 @@ public class InternalNode {
 			System.out.println(content);
 			BasicEvent event = JSON.parseObject(content, BasicEvent.class);
 			EventMedia<BasicEvent> media = InternalNode.cache.get(event.getSequence());
-			media.set(event);
+			if(media != null)
+				media.set(event);
 			sk.interestOps(SelectionKey.OP_READ);
 		}
 	}

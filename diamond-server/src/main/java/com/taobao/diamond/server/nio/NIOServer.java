@@ -11,6 +11,9 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
+
+import com.alibaba.fastjson.JSON;
 
 public class NIOServer {
 	private Selector selector;
@@ -59,7 +62,11 @@ public class NIOServer {
 			sc.register(selector, SelectionKey.OP_READ);
 			sk.interestOps(SelectionKey.OP_ACCEPT);
 			System.out.println("Server is listening from client: " + sc.getRemoteAddress());
-			sc.write(charset.encode("ok"));
+			BasicEvent e = new BasicEvent();
+			e.setRawContent("ok");
+			e.setTerm(-1);
+			e.setSequence(UUID.randomUUID().toString());
+			sc.write(charset.encode(JSON.toJSONString(e)));
 		} else if(sk.isReadable()) {
 			SocketChannel sc = (SocketChannel) sk.channel();
 			ByteBuffer buff = ByteBuffer.allocate(1024);
@@ -79,10 +86,13 @@ public class NIOServer {
 			}
 			if(content.length() > 0) {
 				String[] arrayContent = content.toString().split(USER_CONTENT_SPILIT);
-				if(arrayContent != null && arrayContent.length == 1) {
-					// TODO 消息处理
-					sc.write(charset.encode("success"));
+				if(arrayContent != null && arrayContent.length == 2) {
+					BasicEvent e = JSON.parseObject(arrayContent[1], BasicEvent.class);
+					e.setRawContent("success");
+					System.out.println(JSON.toJSONString(e));
+					sc.write(charset.encode(JSON.toJSONString(e)));
 				} else {
+					System.out.println("server：长度不正确");
 					sc.write(charset.encode("处理消息"));
 				}
 			}

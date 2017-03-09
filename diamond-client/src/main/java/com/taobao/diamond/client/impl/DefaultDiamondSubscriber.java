@@ -117,9 +117,6 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
     private HttpClient httpClient = null;
 
-    private volatile boolean bFirstCheck = true;
-
-
     public DefaultDiamondSubscriber(SubscriberListener subscriberListener) {
         this.subscriberListener = subscriberListener;
         this.diamondConfigure = new DiamondConfigure();
@@ -158,7 +155,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
         }
 
         if (MockServer.isTestMode()) {
-            bFirstCheck = false;
+            this.diamondConfigure.setPollingIntervalTime(60);
         }
         else {
             // 设置轮询间隔时间
@@ -234,28 +231,30 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
      * 循环探测配置信息是否变化，如果变化，则再次向DiamondServer请求获取对应的配置信息
      */
     private void rotateCheckConfigInfo() {
-        scheduledExecutor.schedule(new Runnable() {
+        scheduledExecutor.scheduleWithFixedDelay(new Runnable() {
             public void run() {
                 if (!isRun) {
                     log.warn("DiamondSubscriber不在运行状态中，退出查询循环");
                     return;
                 }
                 try {
-                    checkLocalConfigInfo();
-                    checkDiamondServerConfigInfo();
-                    checkSnapshot();
+                	checkLocalConfigInfo();
+                } catch(Exception e) {
+                	log.error("探测本地配置发生异常", e);
                 }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    log.error("循环探测发生异常", e);
+                try {
+                	checkDiamondServerConfigInfo();
+                } catch(Exception e) {
+                	log.error("探测服务器配置发生异常", e);
                 }
-                finally {
-                    rotateCheckConfigInfo();
+                try {
+                	checkSnapshot();
+                } catch(Exception e) {
+                	log.error("探测快照配置发生异常", e);
                 }
             }
 
-        }, bFirstCheck ? 60 : diamondConfigure.getPollingIntervalTime(), TimeUnit.SECONDS);
-        bFirstCheck = false;
+        }, 1, diamondConfigure.getPollingIntervalTime(), TimeUnit.SECONDS);
     }
 
 

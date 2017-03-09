@@ -84,7 +84,7 @@
 	</servlet-mapping>
 	
 	<welcome-file-list>
-		<welcome-file>/jsp/login.jsp</welcome-file>
+		<welcome-file>/ftl/login.ftl</welcome-file>
 	</welcome-file-list>
 
 	<error-page>

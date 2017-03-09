@@ -111,7 +111,6 @@ public class DiskService {
         else {
             throw new ConfigServiceException("config info is being motified, dataId=" + dataId + ",group=" + group);
         }
-
     }
 
 

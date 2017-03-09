@@ -7,9 +7,11 @@ import java.sql.Timestamp;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -76,6 +78,8 @@ public class PersistService {
         return this.jt;
     }
 
+    @Autowired(required = false)
+    private DataSource dataSource;
 
     @PostConstruct
     public void initDataSource() throws Exception {
@@ -95,6 +99,7 @@ public class PersistService {
 
         this.jt = new JdbcTemplate();
         this.jt.setDataSource(ds);
+//        this.jt.setDataSource(dataSource);
         // 设置最大记录数，防止内存膨胀
         this.jt.setMaxRows(MAX_ROWS);
         // 设置JDBC执行超时时间

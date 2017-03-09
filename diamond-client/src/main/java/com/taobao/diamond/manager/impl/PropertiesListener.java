@@ -14,15 +14,15 @@ import java.io.StringReader;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.taobao.diamond.manager.ManagerListenerAdapter;
 
 
 public abstract class PropertiesListener extends ManagerListenerAdapter {
 
-    private static final Log log = LogFactory.getLog(PropertiesListener.class);
+    private static final Logger log = LoggerFactory.getLogger(PropertiesListener.class);
 
 
     public void receiveConfigInfo(String configInfo) {

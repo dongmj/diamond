@@ -47,7 +47,6 @@ public class LoginController {
         }
     }
 
-
     public AdminService getAdminService() {
         return adminService;
     }

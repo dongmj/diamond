@@ -10,7 +10,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class Launcher {
-	public static final int PORT = 8080;
+	public static final int PORT = 10510;
 	public static final String CONTEXT = "/";
 	
 	private static final String DEFAULT_WEBAPP_PATH = "src/main/webapp";
@@ -46,7 +46,7 @@ public class Launcher {
 	}
 	
 	public void startJetty(int port, String context) {
-		final Server server = Launcher.createJettyServer(PORT, CONTEXT);
+		final Server server = Launcher.createDevServer(port, context);
 		try {
 			server.stop();
 			server.start();
@@ -58,6 +58,6 @@ public class Launcher {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		new Launcher().startJetty(8080, "");
+		new Launcher().startJetty(PORT, CONTEXT);
 	}
 }

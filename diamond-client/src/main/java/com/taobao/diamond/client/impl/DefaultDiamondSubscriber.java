@@ -46,6 +46,8 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.taobao.diamond.client.DiamondConfigure;
 import com.taobao.diamond.client.DiamondSubscriber;
@@ -74,7 +76,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
     // 上一次正确配置的镜像目录
     private static final String SNAPSHOT_DIR = "snapshot";
 
-    private static final Log log = LogFactory.getLog(DefaultDiamondSubscriber.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDiamondSubscriber.class);
 
     private static final int SC_OK = 200;
 
@@ -84,13 +86,13 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
     private static final int SC_SERVICE_UNAVAILABLE = 503;
 
-    static {
-        try {
-            LoggerInit.initLogFromBizLog();
-        }
-        catch (Throwable _) {
-        }
-    }
+//    static {
+//        try {
+//            LoggerInit.initLogFromBizLog();
+//        }
+//        catch (Throwable _) {
+//        }
+//    }
     private final Log dataLog = LogFactory.getLog(LoggerInit.LOG_NAME_CONFIG_DATA);
 
     private final ConcurrentMap<String/* DataID */, ConcurrentMap<String/* Group */, CacheData>> cache =
@@ -1175,7 +1177,7 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
             if (log.isInfoEnabled()) {
                 log.info("添加了DataID[" + dataId + "]，其Group为" + group);
             }
-            this.start();
+//            this.start();
         }
     }
 
@@ -1258,7 +1260,15 @@ class DefaultDiamondSubscriber implements DiamondSubscriber {
 
 
     private void copyDiamondConfigure(DiamondConfigure diamondConfigure) {
-        // TODO 哪些值可以在运行时动态更新?
+    	// 在线更新配置
+    	this.diamondConfigure.setPollingIntervalTime(diamondConfigure.getPollingIntervalTime());
+    	this.diamondConfigure.setOnceTimeout(diamondConfigure.getOnceTimeout());
+    	this.diamondConfigure.setReceiveWaitTime(diamondConfigure.getReceiveWaitTime());
+    	this.diamondConfigure.setDomainNameList(diamondConfigure.getDomainNameList());
+    	this.diamondConfigure.setUseFlowControl(diamondConfigure.isUseFlowControl());
+    	this.diamondConfigure.setLocalFirst(diamondConfigure.isLocalFirst());
+        this.diamondConfigure.setConfigServerAddress(diamondConfigure.getConfigServerAddress());
+        this.diamondConfigure.setConfigServerPort(diamondConfigure.getConfigServerPort());
     }
 
 }

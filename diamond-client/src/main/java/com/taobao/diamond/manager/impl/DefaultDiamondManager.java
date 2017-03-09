@@ -15,8 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.taobao.diamond.client.DiamondConfigure;
 import com.taobao.diamond.client.DiamondSubscriber;
@@ -34,7 +34,7 @@ import com.taobao.diamond.manager.ManagerListener;
  */
 public class DefaultDiamondManager implements DiamondManager {
 
-    private static final Log log = LogFactory.getLog(DefaultDiamondManager.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultDiamondManager.class);
 
     private DiamondSubscriber diamondSubscriber = null;
     private final List<ManagerListener> managerListeners = new LinkedList<ManagerListener>();
@@ -57,9 +57,20 @@ public class DefaultDiamondManager implements DiamondManager {
         ((DefaultSubscriberListener) diamondSubscriber.getSubscriberListener()).addManagerListeners(this.dataId,
             this.group, this.managerListeners);
         diamondSubscriber.addDataId(this.dataId, this.group);
-        diamondSubscriber.start();
     }
+    
+    public DefaultDiamondManager(String group, String dataId, ManagerListener managerListener, DiamondConfigure diamondConfigure) {
+    	this.dataId = dataId;
+        this.group = group;
 
+        diamondSubscriber = DiamondClientFactory.getSingletonDiamondSubscriber();
+
+        this.managerListeners.add(managerListener);
+        ((DefaultSubscriberListener) diamondSubscriber.getSubscriberListener()).addManagerListeners(this.dataId,
+            this.group, this.managerListeners);
+        diamondSubscriber.addDataId(this.dataId, this.group);
+        this.setDiamondConfigure(diamondConfigure);
+    }
 
     public DefaultDiamondManager(String dataId, List<ManagerListener> managerListenerList) {
         this(null, dataId, managerListenerList);
@@ -84,9 +95,20 @@ public class DefaultDiamondManager implements DiamondManager {
         ((DefaultSubscriberListener) diamondSubscriber.getSubscriberListener()).addManagerListeners(this.dataId,
             this.group, this.managerListeners);
         diamondSubscriber.addDataId(this.dataId, this.group);
-        diamondSubscriber.start();
     }
 
+    public DefaultDiamondManager(String group, String dataId, List<ManagerListener> managerListenerList, DiamondConfigure diamondConfigure) {
+    	this.dataId = dataId;
+        this.group = group;
+
+        diamondSubscriber = DiamondClientFactory.getSingletonDiamondSubscriber();
+
+        this.managerListeners.addAll(managerListenerList);
+        ((DefaultSubscriberListener) diamondSubscriber.getSubscriberListener()).addManagerListeners(this.dataId,
+            this.group, this.managerListeners);
+        diamondSubscriber.addDataId(this.dataId, this.group);
+    	this.setDiamondConfigure(diamondConfigure);
+    }
 
     public void setManagerListener(ManagerListener managerListener) {
         this.managerListeners.clear();
@@ -98,7 +120,15 @@ public class DefaultDiamondManager implements DiamondManager {
             this.group, this.managerListeners);
     }
 
+    
+    public void start() {
+    	if(diamondSubscriber != null)
+    		diamondSubscriber.start();
+    	else
+    		throw new IllegalStateException("diamondSubscriber未启动，请重启一下程序");
+    }
 
+    
     public void close() {
         /**
          * 因为同一个DataID只能对应一个MnanagerListener，所以，关闭时一次性关闭所有ManagerListener即可

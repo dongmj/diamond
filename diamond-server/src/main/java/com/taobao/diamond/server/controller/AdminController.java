@@ -66,7 +66,7 @@ public class AdminController {
 
         boolean checkSuccess = true;
         String errorMessage = "参数错误";
-        if (StringUtils.isBlank(dataId) || DiamondUtils.hasInvalidChar(dataId.trim())) {
+        if (StringUtils.isBlank(dataId)) {
             checkSuccess = false;
             errorMessage = "无效的DataId";
         }
@@ -191,7 +191,7 @@ public class AdminController {
         ConfigInfo configInfo = new ConfigInfo(dataId, group, content);
         boolean checkSuccess = true;
         String errorMessage = "参数错误";
-        if (StringUtils.isBlank(dataId) || DiamondUtils.hasInvalidChar(dataId.trim())) {
+        if (StringUtils.isBlank(dataId)) {
             checkSuccess = false;
             errorMessage = "无效的DataId";
         }

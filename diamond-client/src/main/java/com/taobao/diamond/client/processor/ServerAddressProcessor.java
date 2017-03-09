@@ -31,8 +31,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.taobao.diamond.client.DiamondConfigure;
 import com.taobao.diamond.common.Constants;
@@ -40,7 +40,7 @@ import com.taobao.diamond.mockserver.MockServer;
 
 
 public class ServerAddressProcessor {
-    private static final Log log = LogFactory.getLog(ServerAddressProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(ServerAddressProcessor.class);
 
     private static final int SC_OK = 200;
 

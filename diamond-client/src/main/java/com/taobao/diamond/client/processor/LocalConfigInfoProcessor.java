@@ -18,8 +18,8 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.taobao.diamond.common.Constants;
 import com.taobao.diamond.configinfo.CacheData;
@@ -33,7 +33,7 @@ import com.taobao.diamond.utils.FileUtils;
 
 
 public class LocalConfigInfoProcessor {
-    private static final Log log = LogFactory.getLog(LocalConfigInfoProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(LocalConfigInfoProcessor.class);
     private ScheduledExecutorService singleExecutor = Executors.newSingleThreadScheduledExecutor();;
 
     private final Map<String/* filePath */, Long/* version */> existFiles = new HashMap<String, Long>();

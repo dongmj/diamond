@@ -26,7 +26,7 @@ public class DistributedResourceBuilder {
             dResource = getResourceInfo(resource, app);
             dResource.setAttributes(getAttributeInfo(dResource, resource));
             setFuntionMethods(dResource, resource);
-            dResource.setImplementation(this);
+            dResource.setImplementation(resource);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -67,6 +67,9 @@ public class DistributedResourceBuilder {
         for(int i = 0; i < props.length; i++) {
             PropertyDescriptor propertyDescriptor = props[i];
             String attrName = propertyDescriptor.getName();
+            // jdk 1.8增加了class成员变更，需要过滤掉
+            if(attrName.equals("class"))
+            	continue;
             DAttribute ann = getAnnotation(clazz, attrName);
             if(ann == null)
                 continue;

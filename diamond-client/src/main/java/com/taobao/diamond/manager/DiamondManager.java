@@ -128,7 +128,11 @@ public interface DiamondManager {
      */
     public DiamondConfigure getDiamondConfigure();
 
-
+    /**
+     * 启动DiamondManager，可以重复调用
+     */
+    public void start();
+    
     /**
      * 关闭这个DiamondManager
      */
